@@ -5,8 +5,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.2",
-    "node.js": "^0.0.1-security"
+    "mongoose": "^8.8.2"
   },
   "name": "csp2-b495-yecla-guico",
   "version": "1.0.0",

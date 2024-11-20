@@ -114,6 +114,7 @@ module.exports.getProfile = (req, res) => {
     .catch(error => errorHandler(error, req, res));
 };
 
+
 // Update Password
 module.exports.updatePassword = async (req, res) => {
   try {
