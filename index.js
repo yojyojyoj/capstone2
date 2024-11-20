@@ -8,6 +8,11 @@ const userRoutes = require('./routes/user.js');
 const productRoutes = require('./routes/product.js');
 const orderRoutes = require('./routes/order.js');
 
+require("./models/Order.js");
+require("./models/Product.js");
+require("./models/User.js");
+
+
 dotenv.config();
 
 const app = express();
