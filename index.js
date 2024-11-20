@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 
 const userRoutes = require('./routes/user.js');
+const productRoutes = require('./routes/product.js');
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(cors(corsOptions));
 
 // Backend route for the users request:
 app.use("/users", userRoutes);
+app.use("/products", productRoutes);
 
 
 // Checking and running server
