@@ -7,25 +7,41 @@ const auth = require('../auth.js');
 const {errorHandler} = require("../auth.js");
 
 module.exports.createProduct = (req, res) => {
-	let newProduct = new Product({
-            name : req.body.name,
-            description : req.body.description,
-            price : req.body.price
+    // Validate request body
+    if (!req.body.name || !req.body.description || !req.body.price) {
+        return res.status(400).send({ 
+            success: false, 
+            message: "All fields (name, description, price) are required." 
         });
+    }
 
-        return Product.findOne({name: req.body.name}).then(existingProduct => {
-            if(existingProcduct){
-                return res.status(409).send({ message:'Product already exists' });
-            }else{
-                return newProduct.save().then(result => res.status(201).send({
-                    success: true,
-                    message: "Product added successfully",
-                    result
-                })).catch(error => errorHandler(error, req, res));
+    let newProduct = new Product({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price
+    });
+
+    // Check if product already exists
+    return Product.findOne({ name: req.body.name })
+        .then(existingProduct => {
+            if (existingProduct) { // Fixed typo
+                return res.status(409).send({ 
+                    success: false, 
+                    message: "Product already exists." 
+                });
+            } else {
+                // Save the new product
+                return newProduct.save()
+                    .then(result => res.status(201).send({
+                        success: true,
+                        message: "Product added successfully.",
+                        result
+                    }))
+                    .catch(error => errorHandler(error, req, res)); // Ensure errorHandler handles unexpected errors
             }
         })
-        .catch(error => errorHandler(error, req, res));
-    };
+        .catch(error => errorHandler(error, req, res)); // Handle database query errors
+};
 
 module.exports.getAllProducts = (req, res) => {
     return Product.find({})

@@ -67,7 +67,7 @@ module.exports.loginUser = (req, res) => {
 	}else{
 		return res.status(400).send({ error: 'Invalid Email' });
 	}
-}
+};
 
 
 // Set User as Admin (Admin only)
