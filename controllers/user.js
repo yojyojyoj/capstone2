@@ -71,7 +71,7 @@ module.exports.loginUser = (req, res) => {
 
 
 // Set User as Admin (Admin only)
- module.exports.updateUserAsAdmin = async (req, res) => {
+module.exports.updateUserAsAdmin = async (req, res) => {
     try {
         const { userId } = req.body;
 
@@ -83,7 +83,7 @@ module.exports.loginUser = (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(404).json({ error: 'User not Found' });
+            return res.status(404).json({ error: 'User not found.' });
         }
 
         // Update the user's admin status
@@ -92,9 +92,44 @@ module.exports.loginUser = (req, res) => {
 
         res.status(200).json({ updatedUser: user });
     } catch (error) {
-        res.status(500).json({ message: 'Server error.', error: error.message });
+        const errorMessage = error.message || '';
+        
+        // Define regex patterns for various properties
+        const regexPatterns = {
+            stringValue: /value "(.*?)"/, // Extracts the value causing the error
+            valueType: /\(type (.*?)\)/, // Extracts the value type, e.g., string
+            kind: /Cast to (.*?) failed/, // Extracts the kind of cast (ObjectId)
+            value: /value "(.*?)"/, // Extracts the value again, similar to stringValue
+            path: /at path "(.*?)"/, // Extracts the field path (_id)
+            reason: /failed for value/, // Check if the failure is due to the value
+            name: /Cast to (.*?) failed/, // Extracts the error name (ObjectId)
+            message: /Cast to ObjectId failed.*$/, // Full message pattern
+        };
+
+        // Extract properties using the regex patterns
+        const details = {};
+
+        for (const [key, regex] of Object.entries(regexPatterns)) {
+            const match = errorMessage.match(regex);
+            if (match) {
+                details[key] = match[1];
+            }
+        }
+
+        // If no matches are found, fallback to the message itself
+        if (!details.message) {
+            details.message = errorMessage;
+        }
+
+        // Send the error details back in the response
+        res.status(500).json({
+            error: 'Failed in Find',
+            details,
+        });
     }
 };
+
+
 
 
 // Retrieve User Details
