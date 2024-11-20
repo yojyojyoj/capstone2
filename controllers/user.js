@@ -108,7 +108,7 @@ module.exports.getProfile = (req, res) => {
         }else {
             // if the user is found, return the user.
             user.password = "";
-            return res.status(200).send(user);
+            return res.status(200).send({user: user});
         }  
     })
     .catch(error => errorHandler(error, req, res));

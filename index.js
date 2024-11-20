@@ -43,7 +43,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Backend route for the users request:
-app.use("/", userRoutes);
+app.use("/users", userRoutes);
 app.use("/", productRoutes);
 app.use("/", orderRoutes);
 

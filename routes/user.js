@@ -4,15 +4,15 @@ const { verify, verifyAdmin, isLoggedIn } = require("../auth.js");
 
 const router = express.Router();
 
-router.post("/users/register", userController.registerUser);
+router.post("/register", userController.registerUser);
 
-router.post("/users/login", userController.loginUser);
+router.post("/login", userController.loginUser);
 
-router.patch("/users/:id/set-as-admin",verify, verifyAdmin, userController.updateUserAsAdmin);
+router.patch("/:id/set-as-admin",verify, verifyAdmin, userController.updateUserAsAdmin);
 
-router.get("/users/details", verify, userController.getProfile);
+router.get("/details", verify, userController.getProfile);
 
-router.patch("/users/update-password", verify, userController.updatePassword);
+router.patch("/update-password", verify, userController.updatePassword);
 
 
 
