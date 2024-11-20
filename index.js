@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/user.js');
 const productRoutes = require('./routes/product.js');
+const orderRoutes = require('./routes/order.js');
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(cors(corsOptions));
 // Backend route for the users request:
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
+app.use("/orders", orderRoutes);
 
 
 // Checking and running server
