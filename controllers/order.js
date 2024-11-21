@@ -10,7 +10,7 @@ const { errorHandler } = auth;
 
 // Retrieve Cart
 module.exports.getCart = (req, res) => {
-    const { userId } = req.body;
+    const userId = req.user.id;
 
     /*// Validate input
     if (!userId) {
@@ -32,18 +32,19 @@ module.exports.getCart = (req, res) => {
 
 // Add to cart
 module.exports.addToCart = (req, res) => {
-    const { userId, productsOrdered, totalPrice } = req.body;
+    const { productsOrdered, totalPrice } = req.body;
+    const userId = req.user.id;  // This comes from the verified JWT token
 
     // Ensure all required fields are present
-    if (!userId || !Array.isArray(productsOrdered) || productsOrdered.length === 0 || totalPrice === undefined) {
-        return res.status(400).send({ message: 'Invalid input: User ID, products, and total price are required.' });
+    if (!Array.isArray(productsOrdered) || productsOrdered.length === 0 || totalPrice === undefined) {
+        return res.status(400).send({ message: 'Invalid input: Products and total price are required.' });
     }
 
     // Create a new order instance
     const newOrder = new Order({
-        userId,
-        productsOrdered,
-        totalPrice,
+        userId,  // The userId comes from the JWT token
+        productsOrdered,  // Array of products being ordered
+        totalPrice,  // The total price for the order
     });
 
     // Check if an order already exists for the user
@@ -73,6 +74,7 @@ module.exports.addToCart = (req, res) => {
             return errorHandler(error, req, res); // Custom error handling
         });
 };
+
 
 
 
