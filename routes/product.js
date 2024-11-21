@@ -10,9 +10,9 @@ router.get("/all", verify, verifyAdmin, productController.getAllProducts);
 
 router.get("/active", productController.getAllActive);
 
-router.post("/search-by-name", verify, verifyAdmin, productController.archiveProduct);
+router.post("/search-by-name", productController.searchByName);
 
-router.post("/search-by-price", verify, verifyAdmin, productController.archiveProduct);
+router.post("/search-by-price", productController.searchByPrice);
 
 router.get("/:productId", productController.getProduct);
 

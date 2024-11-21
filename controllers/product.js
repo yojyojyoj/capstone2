@@ -40,7 +40,7 @@ module.exports.createProduct = (req, res) => {
                     .catch(error => errorHandler(error, req, res)); // Ensure errorHandler handles unexpected errors
             }
         })
-        .catch(error => errorHandler(error, req, res)); // Handle database query errors
+        .catch(error => errorHandler(error, req, res)); 
 };
 
 module.exports.getAllProducts = (req, res) => {
@@ -140,4 +140,74 @@ module.exports.activateProduct = (req, res) => {
             }
         })
         .catch(error => errorHandler(error, req, res));
+};
+
+module.exports.searchByName = async (req, res) => {
+  try {
+    
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: 'Product name is required' });
+    }
+
+    // Perform the search using a case-insensitive regex to allow partial matches
+    const products = await Product.find({
+      name: { $regex: name, $options: 'i' } // 'i' for case-insensitive search
+    });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: 'No products found' });
+    }
+
+    // Return the matching products
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports.searchByPrice = async (req, res) => {
+  try {
+    
+    const { minPrice, maxPrice } = req.body;
+
+    // Check if both minPrice and maxPrice are provided for a range search
+    if (minPrice && maxPrice) {
+      const products = await Product.find({
+        price: { $gte: minPrice, $lte: maxPrice }
+      });
+
+      if (products.length === 0) {
+        return res.status(404).json({ message: 'No products found in this price range' });
+      }
+
+      return res.status(200).json(products);
+    }
+
+    // If only minPrice or maxPrice is provided, do an exact match or greater/lesser than search
+    if (minPrice) {
+      const products = await Product.find({ price: { $gte: minPrice } });
+      if (products.length === 0) {
+        return res.status(404).json({ message: 'No products found above this price' });
+      }
+      return res.status(200).json(products);
+    }
+
+    if (maxPrice) {
+      const products = await Product.find({ price: { $lte: maxPrice } });
+      if (products.length === 0) {
+        return res.status(404).json({ message: 'No products found below this price' });
+      }
+      return res.status(200).json(products);
+    }
+
+    // If no price filter is provided, return a message
+    return res.status(400).json({ message: 'Please provide a valid price range or price filter' });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
 };

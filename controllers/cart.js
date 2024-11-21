@@ -106,3 +106,74 @@ module.exports.updateCartQuantity = (req, res) => {
         })
         .catch(error => errorHandler(error, req, res)); // Use custom error handling
 };
+
+// Remove Products from Cart
+module.exports.removeFromCart = (req, res) => {
+    return Cart.findOne({userId: req.user.id})
+    .then(result => {
+        if(!result) {
+            return res.status(404).json({ message: "Cart not found."});
+        } else {
+            const index = result.cartItems.findIndex(item => item.productId === req.params.productId);
+
+            if(index >= 0) {
+                const removedItem = result.cartItems.filter(item => item.productId === req.params.productId);
+
+                result.cartItems.splice(index, 1);
+
+                result.totalPrice -= removedItem[0].subtotal;
+            } else {
+                return res.status(404).json({message: "Item not found in cart"});
+            }
+        }
+    
+        return result.save()
+        .then(result => {
+            return res.status(200).json({
+                message: "Item removed from cart successfully",
+                updatedCart: result
+            })
+        })
+        .catch(err => errorHandler(err, req, res));
+    })
+    .catch(err => errorHandler(err, req, res));
+};
+
+// Clear Cart
+module.exports.clearCart = (req, res) => {
+    // Find the user's cart by their ID
+    return Cart.findOne({ userId: req.user.id })
+        .then(result => {
+            // If no cart found, send a 404 response
+            if (!result) {
+                return res.status(404).json({ message: "Cart not found." });
+            }
+
+            // Clear the cart items and reset total price
+            result.cartItems = [];
+            result.totalPrice = 0;
+
+            // Save the updated cart
+            return result.save()
+                .then(updatedCart => {
+                    return res.status(200).json({
+                        message: "Cart cleared successfully.",
+                        updatedCart,
+                    });
+                })
+                .catch(err => {
+                    // Handle any errors while saving the cart
+                    return res.status(500).json({
+                        message: "An error occurred while clearing the cart.",
+                        error: err,
+                    });
+                });
+        })
+        .catch(err => {
+            // Handle any database errors
+            return res.status(500).json({
+                message: "An error occurred while fetching the cart.",
+                error: err,
+            });
+        });
+};
