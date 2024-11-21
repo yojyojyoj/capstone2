@@ -23,7 +23,7 @@ module.exports.getCart = (req, res) => {
             if (cart) {
                 return res.status(200).send({ cart });
             } else {
-                return res.status(404).send({ message: 'Cart not found.' });
+                return res.status(400).send({ message: 'Cart not found.' });
             }
         })
         .catch(error => errorHandler(error, req, res)); // Retain custom error handling
@@ -34,10 +34,10 @@ module.exports.getCart = (req, res) => {
 module.exports.addToCart = (req, res) => {
     const { userId, productsOrdered, totalPrice } = req.body;
 
-    // // Validate input
-    // if (!userId || !productsOrdered || totalPrice === undefined) {
-    //     return res.status(400).send({ message: 'User ID, products, and total price are required.' }); // 400 for bad request
-    // }
+    // Validate input
+    if (!userId || !productsOrdered || totalPrice === undefined) {
+        return res.status(400).send({ message: 'User ID, products, and total price are required.' }); // 400 for bad request
+    }
 
     // Create a new order instance from request body
     let newOrder = new Order({
