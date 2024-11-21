@@ -80,7 +80,8 @@ module.exports.addToCart = (req, res) => {
 
 // Update quantity of product:
 module.exports.updateCartQuantity = (req, res) => {
-    const { userId, productId, quantity } = req.body;
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
 
     // Validate input
     if (!userId || !productId || quantity === undefined) {
