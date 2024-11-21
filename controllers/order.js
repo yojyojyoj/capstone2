@@ -12,16 +12,11 @@ const { errorHandler } = auth;
 module.exports.getCart = (req, res) => {
     const userId = req.user.id;
 
-    /*// Validate input
-    if (!userId) {
-        return res.status(400).send({ message: 'User ID is required to retrieve the cart.' });
-    }*/
-
     // Find the cart (order) by userId
     return Order.findOne({ userId }) // Updated to findOne and match userId
         .then(cart => {
             if (cart) {
-                return res.status(200).send({ cart });
+                return res.status(200).send({ cart: cart });
             } else {
                 return res.status(400).send({ message: 'Cart not found.' });
             }
@@ -80,18 +75,18 @@ module.exports.addToCart = (req, res) => {
 
 // Update quantity of product:
 module.exports.updateCartQuantity = (req, res) => {
-    const { productId, quantity } = req.body;
+    const { productId, newQuantity } = req.body;
     const userId = req.user.id;
 
     // Validate input
-    if (!userId || !productId || quantity === undefined) {
+    if (!userId || !productId || newQuantity === undefined) {
         return res.status(400).send({ message: 'User ID, Product ID, and Quantity are required.' });
     }
 
     // Find and update the specific product's quantity in the order
     return Order.findOneAndUpdate(
         { userId, "productsOrdered.productId": productId }, // Match order by userId and productId
-        { $set: { "productsOrdered.$.quantity": quantity } }, // Update the quantity of the matched product
+        { $set: { "productsOrdered.$.quantity": newQuantity } }, // Update the quantity of the matched product
         { new: true } // Return the updated document
     )
         .then(updatedOrder => {
