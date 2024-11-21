@@ -25,7 +25,7 @@ module.exports.getCart = (req, res) => {
 
 
 // Add to cart
-module.exports.addToCart = (req, res) => {
+/*module.exports.addToCart = (req, res) => {
     const { cartItems, totalPrice } = req.body;
     const userId = req.user?.id;  // Extract user ID from JWT token
 
@@ -88,6 +88,56 @@ module.exports.addToCart = (req, res) => {
             console.error('Database query error:', error.message);
             return errorHandler(error, req, res); // Custom error handling
         });
+};*/
+
+module.exports.addToCart = async (req, res) => {
+    try {
+        const { productId, price, quantity } = req.body;
+        userId = req.user.id;
+
+        // Validate input
+        if (!userId || !productId || !price || !quantity) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        // Calculate the subtotal
+        const subtotal = price * quantity;
+
+        // Find the user's cart
+        let cart = await Cart.findOne({ userId });
+
+        if (cart) {
+            // Check if the product is already in the cart
+            const existingItemIndex = cart.cartItems.findIndex(item => item.productId === productId);
+
+            if (existingItemIndex !== -1) {
+                // Update the existing item's quantity and subtotal
+                cart.cartItems[existingItemIndex].quantity += quantity;
+                cart.cartItems[existingItemIndex].subtotal += subtotal;
+            } else {
+                // Add the new product to the cart
+                cart.cartItems.push({ productId, quantity, subtotal });
+            }
+
+            // Update the total price
+            cart.totalPrice += subtotal;
+        } else {
+            // Create a new cart if none exists
+            cart = new Cart({
+                userId,
+                cartItems: [{ productId, quantity, subtotal }],
+                totalPrice: subtotal,
+            });
+        }
+
+        // Save the cart
+        await cart.save();
+
+        res.status(200).json({ message: 'Item added to cart successfully', cart });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred', error });
+    }
 };
 
 
