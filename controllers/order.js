@@ -12,10 +12,10 @@ const { errorHandler } = auth;
 module.exports.getCart = (req, res) => {
     const { userId } = req.body;
 
-    // Validate input
+    /*// Validate input
     if (!userId) {
         return res.status(400).send({ message: 'User ID is required to retrieve the cart.' });
-    }
+    }*/
 
     // Find the cart (order) by userId
     return Order.findOne({ userId }) // Updated to findOne and match userId
@@ -34,10 +34,10 @@ module.exports.getCart = (req, res) => {
 module.exports.addToCart = (req, res) => {
     const { userId, productsOrdered, totalPrice } = req.body;
 
-    // Validate input
-    if (!userId || !productsOrdered || totalPrice === undefined) {
-        return res.status(400).send({ message: 'User ID, products, and total price are required.' }); // 400 for bad request
-    }
+    // // Validate input
+    // if (!userId || !productsOrdered || totalPrice === undefined) {
+    //     return res.status(400).send({ message: 'User ID, products, and total price are required.' }); // 400 for bad request
+    // }
 
     // Create a new order instance from request body
     let newOrder = new Order({
