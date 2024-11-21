@@ -60,3 +60,31 @@ module.exports.addToCart = (req, res) => {
         })
         .catch(error => errorHandler(error, req, res)); // Retain custom error handling
 };
+
+// Update quantity of product:
+module.exports.updateCartQuantity = (req, res) => {
+    const { userId, productId, quantity } = req.body;
+
+    // Validate input
+    if (!userId || !productId || quantity === undefined) {
+        return res.status(400).send({ message: 'User ID, Product ID, and Quantity are required.' });
+    }
+
+    // Find and update the specific product's quantity in the order
+    return Order.findOneAndUpdate(
+        { userId, "productsOrdered.productId": productId }, // Match order by userId and productId
+        { $set: { "productsOrdered.$.quantity": quantity } }, // Update the quantity of the matched product
+        { new: true } // Return the updated document
+    )
+        .then(updatedOrder => {
+            if (updatedOrder) {
+                res.status(200).send({
+                    message: 'Product quantity updated successfully.',
+                    updatedCart: updatedOrder,
+                });
+            } else {
+                res.status(404).send({ message: 'Order or product not found.' });
+            }
+        })
+        .catch(error => errorHandler(error, req, res)); // Use custom error handling
+};
