@@ -73,16 +73,7 @@ module.exports.loginUser = (req, res) => {
 // Set User as Admin (Admin only)
 module.exports.updateUserAsAdmin = async (req, res) => {
     try {
-        const { userId } = req.body;
-
-        if (!userId) {
-            return res.status(400).json({ message: 'User ID is required.' });
-        }
-        // Check if userId is a valid ObjectId
-                const mongoose = require('mongoose');
-                if (!mongoose.Types.ObjectId.isValid(userId)) {
-                    return res.status(400).json({ message: 'Invalid User ID format.' });
-                }
+        const userId  = req.params.id; // Assuming req.user is populated by JWT authentication middleware
 
         // Find the user by ID
         const user = await User.findById(userId);
@@ -98,7 +89,7 @@ module.exports.updateUserAsAdmin = async (req, res) => {
         res.status(200).json({ updatedUser: user });
     } catch (error) {
         const errorMessage = error.message || '';
-        
+
         // Define regex patterns for various properties
         const regexPatterns = {
             stringValue: /value "(.*?)"/, // Extracts the value causing the error
@@ -133,6 +124,7 @@ module.exports.updateUserAsAdmin = async (req, res) => {
         });
     }
 };
+
 
 
 
