@@ -78,10 +78,10 @@ module.exports.updateCartQuantity = (req, res) => {
     const { productId, newQuantity } = req.body;
     const userId = req.user.id;
 
-    // Validate input
+    /*// Validate input
     if (!userId || !productId || newQuantity === undefined) {
         return res.status(400).send({ message: 'User ID, Product ID, and Quantity are required.' });
-    }
+    }*/
 
     // Find and update the specific product's quantity in the order
     return Order.findOneAndUpdate(
