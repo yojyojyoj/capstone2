@@ -32,15 +32,22 @@ module.exports.getCart = (req, res) => {
 
 // Add to cart
 module.exports.addToCart = (req, res) => {
+    const { userId, productsOrdered, totalPrice } = req.body;
+
+    // Validate input
+    if (!userId || !productsOrdered || totalPrice === undefined) {
+        return res.status(400).send({ message: 'User ID, products, and total price are required.' }); // 400 for bad request
+    }
+
     // Create a new order instance from request body
     let newOrder = new Order({
-        userId: req.body.userId,
-        productsOrdered: req.body.productsOrdered,
-        totalPrice: req.body.totalPrice,
+        userId,
+        productsOrdered,
+        totalPrice,
     });
 
     // Check if an order already exists for the user
-    return Order.findOne({ userId: req.body.userId }) // Using Order instead of Cart
+    return Order.findOne({ userId })
         .then(existingOrder => {
             if (existingOrder) {
                 // Conflict if an order already exists
@@ -50,16 +57,23 @@ module.exports.addToCart = (req, res) => {
                 return newOrder
                     .save()
                     .then(cart =>
-                        res.status(201).send({                         
-                            message: 'Items added to cart successfully',
-                            cart: cart,
+                        res.status(201).send({
+                            message: 'Items added to cart successfully.',
+                            cart,
                         })
                     )
-                    .catch(error => errorHandler(error, req, res)); // Retain custom error handling
+                    .catch(error => {
+                        console.error('Database save error:', error.message);
+                        errorHandler(error, req, res); // Retain custom error handling
+                    });
             }
         })
-        .catch(error => errorHandler(error, req, res)); // Retain custom error handling
+        .catch(error => {
+            console.error('Database query error:', error.message);
+            errorHandler(error, req, res); // Retain custom error handling
+        });
 };
+
 
 // Update quantity of product:
 module.exports.updateCartQuantity = (req, res) => {
