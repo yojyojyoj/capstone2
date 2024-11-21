@@ -78,6 +78,11 @@ module.exports.updateUserAsAdmin = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required.' });
         }
+        // Check if userId is a valid ObjectId
+                const mongoose = require('mongoose');
+                if (!mongoose.Types.ObjectId.isValid(userId)) {
+                    return res.status(400).json({ message: 'Invalid User ID format.' });
+                }
 
         // Find the user by ID
         const user = await User.findById(userId);
