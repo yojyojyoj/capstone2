@@ -10,6 +10,10 @@ router.get("/all", verify, verifyAdmin, productController.getAllProducts);
 
 router.get("/active", productController.getAllActive);
 
+router.post("/search-by-name", verify, verifyAdmin, productController.archiveProduct);
+
+router.post("/search-by-price", verify, verifyAdmin, productController.archiveProduct);
+
 router.get("/:productId", productController.getProduct);
 
 router.patch("/:productId/update", verify, verifyAdmin, productController.updateProduct);
@@ -17,6 +21,7 @@ router.patch("/:productId/update", verify, verifyAdmin, productController.update
 router.patch("/:productId/archive", verify, verifyAdmin, productController.archiveProduct);
 
 router.patch("/:productId/activate", verify, verifyAdmin, productController.activateProduct);
+
 
 
 module.exports = router;

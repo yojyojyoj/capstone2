@@ -7,6 +7,8 @@ const cors = require('cors');
 const userRoutes = require('./routes/user.js');
 const productRoutes = require('./routes/product.js');
 const orderRoutes = require('./routes/order.js');
+const cartRoutes = require('./routes/cart.js');
+
 
 // require("./models/Order.js");
 // require("./models/Product.js");
@@ -45,7 +47,9 @@ app.use(cors(corsOptions));
 // Backend route for the users request:
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
-app.use("/cart", orderRoutes);
+// app.use("/cart", orderRoutes);
+app.use("/cart", cartRoutes);
+
 
 
 // Checking and running server

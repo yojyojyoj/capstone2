@@ -4,11 +4,8 @@ const {verify, verifyAdmin} = require("../auth.js");
 
 const router = express.Router();
 
-router.get("/get-cart", verify, orderController.getCart);
 
-router.post("/add-to-cart", verify, orderController.addToCart);
 
-router.patch("/update-cart-quantity", verify, orderController.updateCartQuantity);
 
 
 
