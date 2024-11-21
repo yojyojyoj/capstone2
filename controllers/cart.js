@@ -35,7 +35,7 @@ module.exports.addToCart = (req, res) => {
     }
 
     // Validate cartItems and totalPrice
-    if (!Array.isArray(cartItems) || cartItems.length === 0 || totalPrice === undefined) {
+    if (cartItems.length === 0 || totalPrice === undefined) {
         return res.status(400).send({ message: 'Invalid input: Products and total price are required.' });
     }
 
@@ -47,7 +47,7 @@ module.exports.addToCart = (req, res) => {
     const newCart = new Cart({
         userId,
         cartItems,
-        totalPrice,
+        totalPrice
     });
 
     // Check for existing order
@@ -56,18 +56,32 @@ module.exports.addToCart = (req, res) => {
             if (existingCart) {
                 return res.status(409).send({ message: 'An order already exists for this user.' });
             } else {
-                return newCart
-                    .save()
-                    .then(cart => {
-                        return res.status(201).send({
-                            message: 'Items added to cart successfully.',
-                            cart,
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Database save error:', error.message);
-                        return errorHandler(error, req, res); // Custom error handling
-                    });
+                return newCart.save()
+    .then(cart => {
+        // Rearrange fields for response
+        const reorderedCart = {
+            _id: cart._id,
+            userId: cart.userId,
+            cartItems: cart.cartItems.map(item => ({
+                _id: item._id,
+                productId: item.productId,
+                quantity: item.quantity,
+                subtotal: item.subtotal,
+            })),
+            totalPrice: cart.totalPrice,
+            orderedOn: cart.orderedOn,
+            __v: cart.__v
+        };
+
+        return res.status(201).send({
+            message: 'Items added to cart successfully.',
+            cart: reorderedCart,
+        });
+    })
+    .catch(error => {
+        console.error('Database save error:', error.message);
+        return errorHandler(error, req, res); // Custom error handling
+    });
             }
         })
         .catch(error => {
