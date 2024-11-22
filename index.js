@@ -47,7 +47,6 @@ app.use(cors(corsOptions));
 // Backend route for the users request:
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
-// app.use("/cart", orderRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 

@@ -139,46 +139,6 @@ module.exports.removeFromCart = (req, res) => {
     .catch(err => errorHandler(err, req, res));
 };
 
-// Clear Cart
-/*module.exports.clearCart = (req, res) => {
-    // Find the user's cart by their ID
-    const userId = req.user.id;
-    return Cart.findOne({ userId })
-        .then(result => {
-            // If no cart found, send a 404 response
-            if (!result) {
-                return res.status(404).json({ message: "Cart not found." });
-            }
-
-            // Clear the cart items and reset total price
-            result.cartItems = [];
-            result.totalPrice = 0;
-
-            // Save the updated cart
-            return result.save()
-                .then(updatedCart => {
-                    return res.status(200).json({
-                        message: "Cart cleared successfully.",
-                        updatedCart,
-                    });
-                })
-                .catch(err => {
-                    // Handle any errors while saving the cart
-                    return res.status(500).json({
-                        message: "An error occurred while clearing the cart.",
-                        error: err,
-                    });
-                });
-        })
-        .catch(err => {
-            // Handle any database errors
-            return res.status(500).json({
-                message: "An error occurred while fetching the cart.",
-                error: err,
-            });
-        });
-};*/
-
 
 module.exports.clearCart = async (req, res) => {
     try {
