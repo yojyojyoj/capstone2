@@ -20,7 +20,7 @@ module.exports.getCart = (req, res) => {
                 return res.status(400).send({ message: 'Cart not found.' });
             }
         })
-        .catch(error => errorHandler(error, req, res)); // Retain custom error handling
+        .catch(error => errorHandler(error, req, res)); 
 };
 
 
@@ -142,7 +142,8 @@ module.exports.removeFromCart = (req, res) => {
 // Clear Cart
 module.exports.clearCart = (req, res) => {
     // Find the user's cart by their ID
-    return Cart.findOne({ userId: req.user.id })
+    const userId = req.user.id;
+    return Cart.findOne({ userId })
         .then(result => {
             // If no cart found, send a 404 response
             if (!result) {
@@ -177,3 +178,4 @@ module.exports.clearCart = (req, res) => {
             });
         });
 };
+
