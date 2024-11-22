@@ -140,7 +140,7 @@ module.exports.removeFromCart = (req, res) => {
 };
 
 // Clear Cart
-module.exports.clearCart = (req, res) => {
+/*module.exports.clearCart = (req, res) => {
     // Find the user's cart by their ID
     const userId = req.user.id;
     return Cart.findOne({ userId })
@@ -177,5 +177,36 @@ module.exports.clearCart = (req, res) => {
                 error: err,
             });
         });
+};*/
+
+
+module.exports.clearCart = async (req, res) => {
+    try {
+        const userId = req.user.id; // Get userId from req.user.id
+
+        // Find the user's cart and clear it
+        const updatedCart = await Cart.findOneAndUpdate(
+            { userId }, // Find the cart by userId
+            {
+                $set: {
+                    cartItems: [], // Clear cart items
+                    totalPrice: 0 // Reset total price
+                }
+            },
+            { new: true } // Return the updated cart
+        );
+
+        // If no cart is found for the user, return a 404 response
+        if (!updatedCart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+
+        // Return the updated cart
+        res.status(200).json({ message: "Cart cleared successfully", cart: updatedCart });
+    } catch (error) {
+        // Handle any errors
+        console.error(error);
+        res.status(500).json({ message: "An error occurred while clearing the cart" });
+    }
 };
 
