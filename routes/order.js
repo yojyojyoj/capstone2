@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post("/checkout", verify, orderController.checkOut);
 
-router.get("/my-orders", verify, orderController.checkOut);
+router.get("/my-orders", verify, orderController.myOrder);
 
-router.get("/all-orders", verify, verifyAdmin, orderController.checkOut);
+router.get("/all-orders", verify, verifyAdmin, orderController.getAllOrders);
 
 
 
