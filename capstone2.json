@@ -2,10 +2,10 @@
     "url": "http://ec2-18-227-114-156.us-east-2.compute.amazonaws.com",
     "routesPrefix": {
 
-        "users": "/b9/users",
-        "products": "/b9/products",
-        "orders": "/b9/orders",
-        "cart": "/b9/cart"
+        "users": "/b4/users",
+        "products": "/b4/products",
+        "orders": "/b4/orders",
+        "cart": "/b4/cart"
 
     }
 }
