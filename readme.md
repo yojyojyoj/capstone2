@@ -1,4 +1,5 @@
-Application Name: 
+Application Name: (GY)
+Goodbye Yesterday is a store that specializes in modern, forward-thinking products, from fashion to technology.
 
 Team Members:
 Khristine Joy Guico
@@ -42,6 +43,9 @@ Clear Cart
 
 Order Resources:
 Non-Admin User Checkout (Create Order)
+Retrieve all orders (Admin only)
+Retrieve authenticated user's orders
+
 
 =======================================
 
