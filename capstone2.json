@@ -1,5 +1,5 @@
 {
-    "url": "http://18.227.114.156/b9",
+    "url": "http://18.227.114.156",
     "routesPrefix": {
 
         "users": "/b9/users",
