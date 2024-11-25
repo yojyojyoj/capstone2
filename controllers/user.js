@@ -38,7 +38,7 @@ module.exports.registerUser = (req, res) => {
 };
 
 // User authentication
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = (req, res) => {
 	if(req.body.email.includes('@')){
 		return User.findOne({email: req.body.email})
 		.then(result => {
