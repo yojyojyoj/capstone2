@@ -36,7 +36,7 @@ app.use(express.urlencoded({extended: true}));
 // costumize the CORS option to meet your specific requirements:
 
 const corsOptions = {
-	origin: ['http://localhost:3000', 'http://zuitt-bootcamp-prod-495-8281-guico.s3-website.us-east-1.amazonaws.com', 'http://zuitt-bootcamp-prod-495-8154-yecla.s3-website.us-east-1.amazonaws.com/' ],
+	origin: ['http://localhost:3000', 'http://zuitt-bootcamp-prod-495-8281-guico.s3-website.us-east-1.amazonaws.com', 'http://zuitt-bootcamp-prod-495-8154-yecla.s3-website.us-east-1.amazonaws.com'  ],
 	// methods: ['GET'] //allow only specified HTTP methods //optional only if you want to restrict methods
 	// allowHeaders: ['Content-Type', "Authorization"], //allow specified
 	credentials: true, //allow credentials example cookis, authorization headers
